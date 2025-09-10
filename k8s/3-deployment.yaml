@@ -10,7 +10,7 @@ spec:
   template:
     containers:
       - name: content-engine-container
-        image: content-engine-image
+        image: content-engine-image:latest
         envFrom:
           - secretRef:
               name: content-engine-secret
