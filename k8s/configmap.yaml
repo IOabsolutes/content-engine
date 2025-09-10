@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: content-engine-configmap
+stringData:
+  PORT: "8080"
+  WELCOME_MESSAGE: "Hello, World!"

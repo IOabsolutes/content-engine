@@ -1,0 +1,16 @@
+apiVesrion: v1
+kind: Service
+metadata:
+  name: content-engine
+
+spec:
+  selector:
+    app: web
+  # type: NodePort # public ip -> attached to the vm
+  # type: ClusterPort # private service
+  type: LoadBalancer # cloud provider -> http ingress nginx (Node Balancer)
+  ports:
+    - name: http
+      protol: TCP
+      port: 80 #example.com -> example.com:80
+      targetPort: 8080

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: content-engine-pod
+
+spec:
+  containers:
+    - name: content-engine-container
+      image: content-engine-image
+      envFrom:
+        - secretRef:
+            name: content-engine-secret
+            key: SECRET_KEY
+  env:
+    - name: PORT
+      valueFrom:
+        configMapKeyRef:
+          name: content-engine-configmap
+          key: PORT
+    - name: WELCOME_MESSAGE
+      valueFrom:
+        configMapKeyRef:
+          name: content-engine-configmap
+          key: WELCOME_MESSAGE
+  envFrom:
+    - configMapRef:
+        name: content-engine-configmap
+  secretRef:
+    name: content-engine-secret
+    key: SECRET_KEY
+  ports:
+    - containerPort: 8080

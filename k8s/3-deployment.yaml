@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment # StatfulSet
+metadata:
+  name: content-engine-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: web
+  template:
+    containers:
+      - name: content-engine-container
+        image: content-engine-image
+        envFrom:
+          - secretRef:
+              name: content-engine-secret
+              key: SECRET_KEY
+    env:
+      - name: VERSION
+        value: "0.1"
+      - name: PORT
+        valueFrom:
+          configMapKeyRef:
+            name: content-engine-configmap
+            key: PORT
+      - name: WELCOME_MESSAGE
+        valueFrom:
+          configMapKeyRef:
+            name: content-engine-configmap
+            key: WELCOME_MESSAGE
+    envFrom:
+      - configMapRef:
+          name: content-engine-configmap
+    secretRef:
+      name: content-engine-secret
+      key: SECRET_KEY
+    ports:
+      - containerPort: 8080
