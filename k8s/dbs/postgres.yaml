@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Statfulset
+metadata:
+  name: postgres
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+
+    spec:
+      containers:
+        name: db-container
+        image: postgres:lastest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: postgres-post
+            containerPort: 5432
+        envFrom:
+          - secretRef:
+            name: postgres
+        volumsMounts:
+          - name: postgres-db-vol
+            mounthPath: /var/lib/postgresql/data
+      initContainers:
+        - name: delete-existing-data
+          image: postgres:lastest
+          command: ["sh", "-c", "rm -rf /var/lib/postgresql/data/*"]
