@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-# from .env import get_config # that is the thing which is helping to store .env
+from .env import config  # that is the thing which is helping to store .env
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-)!2(v04d39y*_at8h!a(6q-@vj3!edr8#eauah_w27*u_zxu29"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -75,13 +75,14 @@ WSGI_APPLICATION = "main.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+DATABASE_URL = config("DATABASE_URL")
+if DATABASE_URL is not None:
+    import dj_database_url
 
+    dj_database_url_config = dj_database_url.config(
+        default=DATABASE_URL, conn_max_age=60, conn_health_checks=True
+    )
+    DATABASES = {"default": dj_database_url_config}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
