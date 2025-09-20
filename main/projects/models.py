@@ -6,6 +6,10 @@ from main.utils.generators import unique_slug_generator
 User = settings.AUTH_USER_MODEL
 
 
+class AnonymousProject(models.Model):
+    value = None
+
+
 class Project(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL)
     title = models.CharField(max_length=120)

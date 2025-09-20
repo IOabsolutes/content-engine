@@ -1,11 +1,15 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from .models import Project
+from .models import Project, AnonymousProject
 
 
 def delete_project_from_session(request):
     try:
         del request.session["project_handle"]
+    except:
+        pass
+    try:
+        request.project = AnonymousProject()
     except:
         pass
 
