@@ -18,9 +18,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from landing import views as landing_views
-
+from projects import views as projects_views
 
 urlpatterns = [
     path("", landing_views.home_page_view),
+    path("activate/project/<slug:handle>/", projects_views.activate_prject_views),
+    path("deactivate/project/<slug:handle>/", projects_views.deactivate_prject_views),
     path("admin/", admin.site.urls),
 ]
