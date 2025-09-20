@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from typing import Any
+
+
 from .env import config  # that is the thing which is helping to store .env
 from pathlib import Path
 
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "landing",
+    "projects",
 ]
 
 MIDDLEWARE = [
@@ -76,7 +80,7 @@ WSGI_APPLICATION = "main.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_URL = config("DATABASE_URL")
+DATABASE_URL: Any = config("DATABASE_URL")
 if DATABASE_URL is not None:
     import dj_database_url
 
@@ -121,16 +125,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "static-root
+STATIC_ROOT = BASE_DIR / "static-root"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-STORAGES = { 
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage"
-        },
-    "staticfiles": {
-        BACKEND: STATICFILES_STORAGE
-        },
-    }
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": STATICFILES_STORAGE},
 }
 
 
