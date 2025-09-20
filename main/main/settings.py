@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "landing",
     "projects",
+    "items",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "proejcts.middleware.ProjectMiddleware"
+    "proejcts.middleware.ProjectMiddleware",
 ]
 
 ROOT_URLCONF = "main.urls"
