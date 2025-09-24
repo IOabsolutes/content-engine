@@ -1,0 +1,464 @@
+{% extends 'base.html' %} {% load static %} {% block head_title %}Update Project - {{ object.title|truncatechars:30 }} - Content Engine{% endblock %} {% block
+content %}
+<div class="min-h-screen bg-gray-50">
+  <!-- Header Section -->
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-r from-amber-600 to-orange-600 rounded-lg flex items-center justify-center"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                ></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900">Update Project</h1>
+              <p class="text-sm text-gray-500">
+                Edit project:
+                <span class="font-medium text-amber-600">{{ object.title }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-3">
+          <a
+            href="{% url 'projects:project_detail' object.id %}"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              ></path>
+            </svg>
+            Back to Project
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mb-6 space-y-2">
+      {% for message in messages %}
+      <div
+        class="{% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %} px-4 py-3 rounded-lg flex items-center"
+      >
+        {% if message.tags == 'success' %}
+        <svg
+          class="w-5 h-5 mr-3 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        {% elif message.tags == 'error' %}
+        <svg
+          class="w-5 h-5 mr-3 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        {% endif %}
+        <span>{{ message }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Current Project Info -->
+    <div class="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+      <div class="flex items-center">
+        <div
+          class="w-10 h-10 bg-amber-600 rounded-lg flex items-center justify-center mr-3"
+        >
+          <svg
+            class="w-6 h-6 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-amber-800">
+            Currently Editing
+          </h3>
+          <p class="text-sm text-amber-700 font-medium">{{ object.title }}</p>
+          <p class="text-xs text-amber-600">
+            Handle: {{ object.handle }} • Created {{ object.timestamp|date:"M d, Y" }}
+            {% if object.active %}
+              • <span class="font-medium">Active</span>
+            {% else %}
+              • <span class="font-medium">Inactive</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div
+      class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+    >
+      <!-- Form Header -->
+      <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <div class="flex items-center">
+          <div
+            class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center mr-3"
+          >
+            <svg
+              class="w-5 h-5 text-amber-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900">Update Project Details</h2>
+            <p class="text-sm text-gray-600">
+              Modify the information below to update this project
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Content -->
+      <form
+        method="post"
+        hx-post="{% url 'projects:project_update' object.id %}"
+        hx-target="#form-messages"
+        hx-swap="innerHTML"
+        class="px-6 py-6"
+      >
+        {% csrf_token %}
+
+        <!-- Form Messages Target for HTMX -->
+        <div id="form-messages" class="mb-4"></div>
+
+        <div class="space-y-6">
+          <!-- Title Field -->
+          <div>
+            <label
+              for="{{ form.title.id_for_label }}"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Project Title <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="text"
+                name="{{ form.title.name }}"
+                id="{{ form.title.id_for_label }}"
+                value="{{ form.title.value|default_if_none:'' }}"
+                required
+                class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                placeholder="Enter project title..."
+                maxlength="120"
+              />
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            {% if form.title.errors %}
+            <div class="mt-2 text-sm text-red-600">
+              {% for error in form.title.errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <p class="mt-1 text-xs text-gray-500">Maximum 120 characters</p>
+          </div>
+
+          <!-- Active Status Field -->
+          <div>
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input
+                  type="checkbox"
+                  name="{{ form.active.name }}"
+                  id="{{ form.active.id_for_label }}"
+                  {% if form.active.value %}checked{% endif %}
+                  class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <label for="{{ form.active.id_for_label }}" class="font-medium text-gray-700">
+                  {{ form.active.label }}
+                </label>
+                <p class="text-gray-500">{{ form.active.help_text }}</p>
+                {% if active_project and active_project.id == object.id %}
+                <p class="text-amber-600 text-xs mt-1">
+                  ⚠️ This project is currently active. Disabling it will deactivate it from your session.
+                </p>
+                {% endif %}
+              </div>
+            </div>
+            {% if form.active.errors %}
+            <div class="mt-2 text-sm text-red-600">
+              {% for error in form.active.errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Handle Information (Read-only) -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center">
+              <div
+                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-medium text-blue-800">
+                  Project Handle Information
+                </h3>
+                <p class="text-sm text-blue-600">
+                  Handle: <span class="font-mono">{{ object.handle }}</span> (cannot be changed)
+                </p>
+                <p class="text-xs text-blue-500 mt-1">
+                  The project handle is automatically generated and remains permanent
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div
+          class="flex items-center justify-between pt-6 mt-6 border-t border-gray-200"
+        >
+          <div class="flex items-center text-sm text-gray-500">
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span
+              >Fields marked with <span class="text-red-500">*</span> are
+              required</span
+            >
+          </div>
+          <div class="flex items-center space-x-3">
+            <a
+              href="{% url 'projects:project_detail' object.id %}"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            >
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+              Cancel
+            </a>
+            <button
+              type="submit"
+              class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm font-medium rounded-lg hover:from-amber-700 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+              Update Project
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
+      <div class="flex items-start">
+        <div
+          class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0"
+        >
+          <svg
+            class="w-5 h-5 text-yellow-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.982 16.5c-.77.833.192 2.5 1.732 2.5z"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-sm font-medium text-gray-900 mb-2">
+            ⚠️ Important Update Information
+          </h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Changes will be saved immediately after clicking "Update Project"</li>
+            <li>• The project handle cannot be modified once created</li>
+            <li>• Disabling an active project will deactivate it from your session</li>
+            <li>• Other team members will see the updated information</li>
+            <li>• Last modified timestamp will be updated automatically</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project History Card -->
+    <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center mb-4">
+        <div
+          class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3"
+        >
+          <svg
+            class="w-5 h-5 text-purple-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+        </div>
+        <h3 class="text-sm font-medium text-gray-900">Project History</h3>
+      </div>
+      <div class="space-y-3">
+        <div class="flex items-center text-sm">
+          <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+          <span class="text-gray-600">Created:</span>
+          <span class="ml-2 text-gray-900 font-medium">{{ object.timestamp|date:"F d, Y at g:i A" }}</span>
+        </div>
+        <div class="flex items-center text-sm">
+          <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+          <span class="text-gray-600">Last Modified:</span>
+          <span class="ml-2 text-gray-900 font-medium">{{ object.updated|date:"F d, Y at g:i A" }}</span>
+          <span class="ml-2 text-gray-500">({{ object.updated|timesince }} ago)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HTMX Success Handling -->
+<script>
+  document.body.addEventListener("htmx:afterRequest", function (event) {
+    if (event.detail.successful) {
+      // Show success message
+      const messagesDiv = document.getElementById("form-messages");
+      if (messagesDiv) {
+        messagesDiv.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center">
+                        <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Project updated successfully!</span>
+                    </div>
+                `;
+        // Auto-hide message after 3 seconds
+        setTimeout(() => {
+          messagesDiv.innerHTML = "";
+        }, 3000);
+      }
+    }
+  });
+</script>
+{% endblock %}

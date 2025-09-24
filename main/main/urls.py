@@ -25,6 +25,7 @@ urlpatterns = [
     path("", landing_views.home_page_view),
     path("activate/project/<slug:handle>/", projects_views.activate_prject_views),
     path("deactivate/project/<slug:handle>/", projects_views.deactivate_prject_views),
+    path("projects/", include("projects.urls")),  # Include projects app URLs
     path("items/", include("items.urls")),  # Include items app URLs
     path("admin/", admin.site.urls),
 ]
