@@ -77,3 +77,13 @@ def item_detail_update_view(request, id=None):
         messages.error(request, "Error updating item.")
 
 
+@login_required
+def item_detail_delete_view(request, id=None):
+    if not hasattr(request, "active_project") or request.active_project is None:
+        messages.error(request, "Please activate a project first.")
+        return render(request, "projects/activate.html", {})
+
+    instance: Items = get_object_or_404(Items, id=id, project=request.active_project)
+    instance.delete()
+    messages.success(request, f"Item '{instance.title}' deleted successfully!")
+    return redirect("item:list")
