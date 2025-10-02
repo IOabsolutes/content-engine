@@ -45,3 +45,35 @@ class ProjectForm(forms.ModelForm):
                 raise forms.ValidationError("Title must be at least 3 characters long.")
             # Check for duplicate titles for the same owner (will be handled in view)
         return title
+
+
+class ProjectCreateForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ["title", "handle"]
+
+    def clean_handle(self):
+        handle = self.cleaned_data.get("handle")
+        if handle == "create":
+            handle = handle.strip()
+            if len(handle) < 3:
+                raise forms.ValidationError(
+                    "Handle must be at least 3 characters long."
+                )
+        return handle
+
+
+class ProjectUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ["title", "description", "handle"]
+
+    def clean_handle(self):
+        handle = self.cleaned_data.get("handle")
+        if handle == "create":
+            handle = handle.strip()
+            if len(handle) < 3:
+                raise forms.ValidationError(
+                    "Handle must be at least 3 characters long."
+                )
+        return handle

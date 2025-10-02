@@ -12,11 +12,15 @@ class AnonymousProject(models.Model):
 
 
 class Project(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name="owned_projects", null=True
+    )
     title = models.CharField(max_length=120)
     handle = models.SlugField(unique=True, blank=True, null=True)
     active = models.BooleanField(default=True)  # type: ignore
-    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+    updated = models.DateTimeField(
+        auto_now_add=False, related_name="updated_projects", auto_now=True
+    )
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     def save(self, *args, **kwargs):
@@ -26,6 +30,9 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse("projects:project_detail", kwargs={"id": self.id})  # type: ignore
+
+    def get_delete_url(self):
+        return reverse("projects:project_delete", kwargs={"handle": self.handle})
 
     class Meta:
         ordering = ["-updated", "-timestamp"]

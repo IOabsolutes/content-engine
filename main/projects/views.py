@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Project, AnonymousProject
 from .forms import ProjectForm
+from items.models import Items
 
 
 def delete_project_from_session(request):
@@ -43,12 +44,12 @@ def deactivate_prject_views(request, handle=None):
 @login_required
 def project_list_view(request):
     """List all projects owned by the current user"""
-    projects = Project.objects.filter(owner=request.user).order_by('-updated')  # type: ignore
+    projects = Project.objects.filter(owner=request.user).order_by("-updated")  # type: ignore
     context = {
-        'object_list': projects,
-        'active_project': getattr(request, 'active_project', None)
+        "object_list": projects,
+        "active_project": getattr(request, "active_project", None),
     }
-    return render(request, 'projects/list.html', context)
+    return render(request, "projects/list.html", context)
 
 
 @login_required
@@ -56,10 +57,10 @@ def project_detail_view(request, id=None):
     """Show details of a specific project"""
     project = get_object_or_404(Project, id=id, owner=request.user)
     context = {
-        'object': project,
-        'active_project': getattr(request, 'active_project', None)
+        "object": project,
+        "active_project": getattr(request, "active_project", None),
     }
-    return render(request, 'projects/detail.html', context)
+    return render(request, "projects/detail.html", context)
 
 
 @login_required
@@ -71,57 +72,75 @@ def project_create_view(request):
         project.owner = request.user
         project.save()
         messages.success(request, f"Project '{project.title}' created successfully!")
-        return redirect('projects:project_detail', id=project.id)
-    
-    context = {
-        'form': form,
-        'active_project': getattr(request, 'active_project', None)
-    }
-    return render(request, 'projects/create.html', context)
+        return redirect("projects:project_detail", id=project.id)
+
+    context = {"form": form, "active_project": getattr(request, "active_project", None)}
+    return render(request, "projects/create.html", context)
 
 
 @login_required
-def project_update_view(request, id=None):
+def project_update_view(request, handle=None):
     """Update an existing project"""
-    project = get_object_or_404(Project, id=id, owner=request.user)
+    project = get_object_or_404(Project, handle=handle, owner=request.user)
     form = ProjectForm(request.POST or None, instance=project)
-    
+
     if form.is_valid():
         updated_project = form.save()
-        messages.success(request, f"Project '{updated_project.title}' updated successfully!")
-        return redirect('projects:project_detail', id=updated_project.id)
-    
+        messages.success(
+            request, f"Project '{updated_project.title}' updated successfully!"
+        )
+        return redirect("projects:project_detail", handle=updated_project.handle)
+
     context = {
-        'form': form,
-        'object': project,
-        'active_project': getattr(request, 'active_project', None)
+        "form": form,
+        "object": project,
+        "active_project": getattr(request, "active_project", None),
     }
-    return render(request, 'projects/update.html', context)
+    return render(request, "projects/update.html", context)
 
 
 @login_required
-def project_delete_view(request, id=None):
+def project_delete_view(request, handle=None):
     """Delete an existing project"""
-    project = get_object_or_404(Project, id=id, owner=request.user)
-    
-    if request.method == 'POST':
+    project = get_object_or_404(Project, handle=handle, owner=request.user)
+    items_qs = Items.objects.filter(project=project).all()
+    items_count = items_qs.count()
+    items_exist = items_count.exists()
+
+    if items_exist and items_count > 10:
+        messages.error(
+            request,
+            "Project has items associated with it. Please delete the items first.",
+        )
+        return redirect(project.get_delete_url(), handle=handle)
+
+    if request.method == "POST":
         # Check confirmation
-        confirm_title = request.POST.get('confirm_title', '').strip()
-        confirm_understand = request.POST.get('confirm_understand')
-        
+        confirm_title = request.POST.get("confirm_title", "").strip()
+        confirm_understand = request.POST.get("confirm_understand")
+
         if confirm_title == project.title and confirm_understand:
             project_title = project.title
             # If this is the active project, deactivate it first
-            if hasattr(request, 'active_project') and request.active_project and request.active_project.id == project.id:
+            if (
+                hasattr(request, "active_project")
+                and request.active_project
+                and request.active_project.handle == project.handle
+            ):
                 delete_project_from_session(request)
             project.delete()
-            messages.success(request, f"Project '{project_title}' deleted successfully!")
-            return redirect('projects:project_list')
+            messages.success(
+                request, f"Project '{project_title}' deleted successfully!"
+            )
+            return redirect("projects:project_list")
         else:
-            messages.error(request, "Confirmation failed. Please verify the project title and checkbox.")
-    
+            messages.error(
+                request,
+                "Confirmation failed. Please verify the project title and checkbox.",
+            )
+
     context = {
-        'object': project,
-        'active_project': getattr(request, 'active_project', None)
+        "object": project,
+        "active_project": getattr(request, "active_project", None),
     }
-    return render(request, 'projects/delete.html', context)
+    return render(request, "projects/delete.html", context)
