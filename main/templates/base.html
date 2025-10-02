@@ -9,8 +9,17 @@
     {% include 'head/css.html' %}
 </head>
 <body>
-    <div>
+    {% if user.is_authenticated %}
+        {% include 'navbar/logged_in.html' %}
+    {% else %}
+        {% include 'navbar/base.html' %}
+    {% endif %}
+    
+    <div class="min-h-screen">
         {% block content %}{% endblock %}
     </div>
+    
+    <!-- Flowbite JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 </body>
 </html>

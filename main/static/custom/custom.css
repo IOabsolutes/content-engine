@@ -1,3 +1,16 @@
 h1 {
     color: red
 }
+
+/* Custom navbar styles */
+.navbar-link-active {
+    color: #60a5fa; /* blue-400 */
+}
+
+/* Ensure proper text color for navbar items on mobile */
+@media (max-width: 768px) {
+    #navbar-default ul,
+    #navbar-logged-in ul {
+        background-color: rgba(31, 41, 55, 0.95); /* gray-800 with opacity */
+    }
+}
