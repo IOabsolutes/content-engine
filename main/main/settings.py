@@ -71,6 +71,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "projects.context_proccer.user_context_projects",
             ],
         },
     },
@@ -139,3 +140,9 @@ STORAGES = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Session Configuration
+# https://docs.djangoproject.com/en/4.2/ref/settings/#sessions
+SESSION_COOKIE_AGE = 1209600
+SESSION_SAVE_EVERY_REQUEST = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False

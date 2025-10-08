@@ -43,25 +43,82 @@
             >Home</a
           >
         </li>
+        <!-- Projects Dropdown -->
         <li>
-          <a
-            href="{% url 'projects:project_list' %}"
-            class="block py-2 px-3 text-gray-200 rounded hover:bg-blue-800 md:hover:bg-transparent md:hover:text-white md:p-0 transition-colors duration-200"
-            >Projects</a
+          <button
+            id="projectsDropdownButton"
+            data-dropdown-toggle="projectsDropdown"
+            class="flex items-center justify-between w-full py-2 px-3 text-gray-200 rounded hover:bg-blue-800 md:hover:bg-transparent md:w-auto md:hover:text-white md:p-0 md:border-0 transition-colors duration-200"
           >
+            Projects
+            <svg
+              class="w-2.5 h-2.5 ml-2.5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+          <!-- Dropdown menu -->
+          <div
+            id="projectsDropdown"
+            class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+          >
+            <ul
+              class="py-2 text-sm text-gray-700"
+              aria-labelledby="projectsDropdownButton"
+            >
+              <li>
+                <a
+                  href="{% url 'projects:project_list' %}"
+                  class="block px-4 py-2 hover:bg-gray-100"
+                  >All Projects</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'projects:project_create' %}"
+                  class="block px-4 py-2 hover:bg-gray-100"
+                  >Create New Project</a
+                >
+              </li>
+              {% if projects_list %}
+              <li><hr class="my-1 border-gray-200" /></li>
+              {% for project in projects_list|slice:":5" %}
+              <li>
+                <a
+                  href="{% url 'projects:project_detail' handle=project.handle %}"
+                  class="block px-4 py-2 hover:bg-gray-100"
+                  title="{{ project.title }}"
+                >
+                  {{ project.title|truncatechars:20 }}
+                </a>
+              </li>
+              {% endfor %} {% if projects_list.count > 5 %}
+              <li>
+                <a
+                  href="{% url 'projects:project_list' %}"
+                  class="block px-4 py-2 text-blue-600 hover:bg-gray-100 font-medium"
+                  >View All ({{ projects_list.count }})</a
+                >
+              </li>
+              {% endif %} {% endif %}
+            </ul>
+          </div>
         </li>
         <li>
           <a
             href="{% url 'item_list' %}"
             class="block py-2 px-3 text-gray-200 rounded hover:bg-blue-800 md:hover:bg-transparent md:hover:text-white md:p-0 transition-colors duration-200"
             >Items</a
-          >
-        </li>
-        <li>
-          <a
-            href="{% url 'projects:project_create' %}"
-            class="block py-2 px-3 text-gray-200 rounded hover:bg-blue-800 md:hover:bg-transparent md:hover:text-white md:p-0 transition-colors duration-200"
-            >Create Project</a
           >
         </li>
         <li>
