@@ -22,10 +22,11 @@ from projects import views as projects_views
 from items import views as items_views
 
 urlpatterns = [
-    path("", landing_views.home_page_view),
+    path("", landing_views.home_page_view, name="home"),
+    path("about/", landing_views.about_page_view, name="about"),
     path("activate/project/<slug:handle>/", projects_views.activate_prject_views),
     path("deactivate/project/<slug:handle>/", projects_views.deactivate_prject_views),
-    path("projects/", include("projects.urls")),  # Include projects app URLs
-    path("items/", include("items.urls")),  # Include items app URLs
+    path("projects/", include("projects.urls"), name="projects"),
+    path("items/", include("items.urls")),
     path("admin/", admin.site.urls),
 ]
